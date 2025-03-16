@@ -51,7 +51,9 @@ export class Engine {
 					this.#fim = true;
 					break;
 				case "pegar":
-					if (this.salaAtual.pegar(tokens[1])) {
+					const item = this.salaAtual.pegar(tokens[1])
+					if (item != null) {
+						this.#mochila.guardar(item);
 						console.log("Ok! " + tokens[1] + " guardado!");
 					} else {
 						console.log("Item " + tokens[1] + " não encontrado.");

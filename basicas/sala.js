@@ -3,18 +3,16 @@ import { Engine } from "./engine.js";
 
 export class Sala {
 	#nome;
+	#objetos;
 	#itens;
-	objetos;
 	#portas;
-	#engine;
 	
-	constructor(nome,engine) {
+	constructor(nome) {
 		validate(arguments,["String",Engine]);
 		this.#nome = nome;
+		this.#objetos = new Map();
 		this.#itens = new Map();
-		this.objetos = new Map();
 		this.#portas = new Map();
-		this.#engine = engine;
 	}
 
 	get nome() {
@@ -22,19 +20,15 @@ export class Sala {
 	}
 	
 	get objetos() {
-		return this.#itens;
+		return this.#objetos;
 	}
 
-	get ferramentas() {
-		return this.objetos;
+	get itens() {
+		return this.#itens;
 	}
 	
 	get portas(){
 		return this.#portas;
-	}
-
-	get engine(){
-		return this.#engine;
 	}
 
     adicionarPorta(sala) {
@@ -43,29 +37,28 @@ export class Sala {
     }
 	
 	objetosDisponiveis(){
-		let arrObjs = [...this.#itens.values()];
-    	return arrObjs.map(obj=>obj.nome+":"+obj.descricao);
+		const objetos = [...this.#objetos.values()];
+    	return objetos.map(obj=>obj.nome).join(", ");
 	}
 
-	ferramentasDisponiveis(){
-		let arrFer = [...this.objetos.values()];
-    	return arrFer.map(f=>f.nome);		
+	itensDisponiveis(){
+		const itens = [...this.#itens.values()];
+    	return itens.map(f=>f.nome).join(", ");
 	}
 	
 	portasDisponiveis(){
 		let arrPortas = [...this.#portas.values()];
-    	return arrPortas.map(sala=>sala.nome);
+    	return arrPortas.map(sala=>sala.nome).join(", ");
 	}
 	
-	pegar(nomeFerramenta) {
-		validate(nomeFerramenta,"String");
-		let ferramenta = this.objetos.get(nomeFerramenta);
-		if (ferramenta != null) {
-			this.#engine.mochila.guarda(ferramenta);
-			this.objetos.delete(nomeFerramenta);
-			return true;
-		}else {
-			return false;
+	pegar(nomeItem) {
+		validate(nomeItem,"String");
+		const item = this.itens.get(nomeItem);
+		if (item != null) {
+			this.itens.delete(nomeItem);
+			return item;
+		} else {
+			return null;
 		}
 	}
 
@@ -77,22 +70,24 @@ export class Sala {
 	textoDescricao() {
 		let descricao = `Você está em ${this.nome}\n`;
 
-        if (this.objetos.size == 0){
-            descricao += "Não há objetos na sala\n";
+        if (this.#objetos.size == 0){
+            descricao += "Objetos: não há objetos na sala\n";
         } else {
             descricao += "Objetos: "+this.objetosDisponiveis()+"\n";
         }
 		
-        if (this.ferramentas.size == 0){
-            descricao += "Não há ferramentas na sala\n";
-        }else{
-            descricao += "Ferramentas: "+this.ferramentasDisponiveis()+"\n";
+        if (this.#itens.size == 0){
+            descricao += "Itens: não há itens na sala\n";
+        } else {
+            descricao += "Itens: "+this.itensDisponiveis()+"\n";
         }
+
         descricao += "Portas: "+this.portasDisponiveis()+"\n";
+
 		return descricao;
 	}
 
-	usa(ferramenta,objeto){
+	usar(item, objeto){
 		return false;
 	}
 }

@@ -50,7 +50,7 @@ export class Engine {
 	jogar() {
 
 		// Descrição de introdução inicial do jogo ao jogador
-		console.log("Des");
+		console.log("Você chega em sua casa, liga a luz da sala e vê um bilhete. No bilhete está escrito:\nOie, não achei o Porco. Vê se ele tá escondido por aí. Logo voltamos.\n- Mãe") ;
 
 		// Loop de lógica básica do jogo
 		while (!this.#fim) {

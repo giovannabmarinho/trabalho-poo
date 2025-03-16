@@ -11,8 +11,4 @@ export class Item {
     get nome() {
         return this.#nome;
     }
-    
-    usar() {
-        return true;
-    }
 }

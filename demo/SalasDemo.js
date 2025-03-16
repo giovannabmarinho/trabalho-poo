@@ -1,85 +1,49 @@
 import { validate } from "bycontract";
-import { Sala, Engine } from "../basicas/index.js";
+import { Sala, Engine, Item } from "../basicas/index.js";
 import { ChaveGaveta, ChaveGuardaRoupa, SacheGato } from "./ItensDemo.js";
-import { GuardaRoupa, PortaChaves, ArmarioBanheiro } from "./ObjetosDemo.js";
+import { GuardaRoupa, PortaChaves, ArmarioBanheiro, Mesa } from "./ObjetosDemo.js";
 
 export class QuartoPais extends Sala {
-	constructor(engine) {
-        validate(engine,Engine);
-		super("QuartoPais",engine);
+	constructor() {
+		super("quarto_pais");
         
 		const guardaRoupa = new GuardaRoupa();
 		this.objetos.set(guardaRoupa.nome, guardaRoupa);
 	}
-
-	usar(item, objeto) {
-		validate(arguments,["String","String"]);
-		return false;
-	}
 }
 
 export class SalaDeEstar extends Sala {
-	constructor(engine) {
-        validate(engine,Engine);
-		super("Sala_de_Estar",engine);
+	constructor() {
+		super("sala_de_estar");
         
 		const portaChaves = new PortaChaves();
 		this.objetos.set(portaChaves.nome,portaChaves);
-	}
 
-	usar(item, objeto) {
-		validate(arguments,["String","String"]);
-		if (!this.engine.mochila.tem(item)){
-			return false;
-		}
-		if (!this.objetos.has(objeto)){
-			return false;
-		}
-        let armario = this.objetos.get(objeto);
-		return armario.usar(this.engine.mochila.pega(item));
+		const chaveGuardaRoupa = new ChaveGuardaRoupa();
+		this.itens.set(chaveGuardaRoupa.nome, chaveGuardaRoupa);
+	
+		const chaveArmario = new ChaveGaveta();
+		this.itens.set(chaveArmario.nome, chaveArmario);
 	}
 }
 
 export class Banheiro extends Sala {
-	constructor(engine) {
-        validate(engine,Engine);
-		super("Banheiro",engine);
-
-		const chave = new ChaveGuardaRoupa();
-		this.itens.set(chave.nome,chave);
+	constructor() {
+		super("banheiro");
 
         const armario = new ArmarioBanheiro();
         this.objetos.set(armario.nome,armario);
 	}
-
-	usar(item, objeto) {
-		validate(arguments,["String","String"]);
-		return false;
-	}
 }
 
 export class Cozinha extends Sala {
-	constructor(engine) {
-        validate(engine,Engine);
-		super("Cozinha",engine);
+	constructor() {
+		super("cozinha");
         
 		const sache = new SacheGato();
 		this.itens.set(sache.nome, sache);
-	}
 
-	usar (item,objeto) {
-		validate(arguments,["String","String"]);
-		if (!this.engine.mochila.tem(item)){
-			return false;
-		}
-		if (!this.objetos.has(objeto)){
-			return false;
-		}
-        let pote = this.objetos.get(objeto);
-		let usou = pote.usar(this.engine.mochila.pega(item));
-		if (pote instanceof PortaChaves && usou == true){
-			this.engine.indicaFimDeJogo();
-		}
-		return usou;
+		const mesa = new Mesa();
+		this.objetos.set(mesa.nome, mesa);
 	}
 }

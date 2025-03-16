@@ -2,29 +2,33 @@ import { validate } from "bycontract";
 import { Item } from "./item.js";
 
 export class Mochila {
-	#ferramentas;
+	#itens;
 
 	constructor(){
-		this.#ferramentas = [];
+		this.#itens = [];
 	}
 
 	guardar(item){
 		validate(item, Item);
-		this.#ferramentas.push(item);
+		this.#itens.push(item);
 	}
 
-	pegar(nomeFerramenta){
-		validate(arguments,["String"]);
-		let ferramenta = this.#ferramentas.find(f => f.nome === nomeFerramenta);
-		return ferramenta;
+	remover(item) {
+		validate(item, Item);
+		this.#itens = this.#itens.filter(i => i != item);
 	}
 
-	tem(nomeFerramenta){
+	pegar(nomeItem){
 		validate(arguments,["String"]);
-		return this.#ferramentas.some(f => f.nome === nomeFerramenta);
+		return this.#itens.find(item => item.nome === nomeItem);
+	}
+
+	tem(nomeItem){
+		validate(arguments,["String"]);
+		return this.#itens.some(item => item.nome === nomeItem);
 	}
 
 	inventario(){
-		return this.#ferramentas.map(obj => obj.nome).join(", ");
+		return this.#itens.map(item => item.nome).join(", ");
 	}
 }

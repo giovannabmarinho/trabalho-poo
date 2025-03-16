@@ -16,6 +16,10 @@ export class GuardaRoupa extends Objeto {
 
 		return false;
 	}
+
+	inspecionar() {
+		return "Miauuuuuuu";
+	}
 }
 
 export class PortaChaves extends Objeto {
@@ -24,7 +28,7 @@ export class PortaChaves extends Objeto {
 	}
 
 	inspecionar() {
-		console.log("Você vê uma chave no porta chaves");
+		return "Você vê duas chaves no porta chaves";
 	}
 }
 
@@ -34,7 +38,7 @@ export class Mesa extends Objeto {
 	}
 
 	inspecionar() {
-		console.log("Sache");
+		return "Há um sachê para gatos em cima dela.";
 	}
 }
 
@@ -53,10 +57,6 @@ export class ArmarioBanheiro extends Objeto {
 	}
 
 	inspecionar() {
-		if (this.acaoOk) {
-			console.log("É um armário com gavetas. Uma delas possui uma chave. As outras possuem produtos de higiene pessoal")
-		} else {
-			console.log("É um armário com gavetas. Uma delas está trancada. As outras possuem produtos de higiene pessoal")
-		}
+		return "É um armário com gavetas.";
 	}
 }

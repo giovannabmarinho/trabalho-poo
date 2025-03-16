@@ -1,5 +1,5 @@
 import { validate } from "bycontract";
-import { Engine } from "./engine.js";
+import { Item } from "./item.js";
 
 export class Sala {
 	#nome;
@@ -8,7 +8,7 @@ export class Sala {
 	#portas;
 	
 	constructor(nome) {
-		validate(arguments,["String",Engine]);
+		validate(nome, "String");
 		this.#nome = nome;
 		this.#objetos = new Map();
 		this.#itens = new Map();
@@ -87,7 +87,29 @@ export class Sala {
 		return descricao;
 	}
 
-	usar(item, objeto){
-		return false;
+	usar(item, nomeObjeto) {
+		validate(arguments, [Item, "String"]);
+
+		const objeto = this.objetos.get(nomeObjeto);
+
+		if (!objeto) {
+			return [false, undefined];
+		}
+
+		const usou = objeto.usar(item);
+
+		return [usou, objeto];
+	}
+
+	inspecionar(nomeObjeto) {
+		validate(arguments, ["String"]);
+
+		const objeto = this.objetos.get(nomeObjeto);
+
+		if (!objeto) {
+			console.log("Item nâo encontrado");
+		} else {
+			console.log(objeto.inspecionar());
+		}
 	}
 }

@@ -1,4 +1,3 @@
-import { validate } from "bycontract";
 import { Sala, Engine, Item } from "../basicas/index.js";
 import { ChaveGaveta, ChaveGuardaRoupa, SacheGato } from "./ItensDemo.js";
 import { GuardaRoupa, PortaChaves, ArmarioBanheiro, Mesa } from "./ObjetosDemo.js";

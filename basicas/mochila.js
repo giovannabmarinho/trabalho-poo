@@ -23,11 +23,6 @@ export class Mochila {
 		return this.#itens.find(item => item.nome === nomeItem);
 	}
 
-	tem(nomeItem){
-		validate(arguments,["String"]);
-		return this.#itens.some(item => item.nome === nomeItem);
-	}
-
 	inventario(){
 		return this.#itens.map(item => item.nome).join(", ");
 	}

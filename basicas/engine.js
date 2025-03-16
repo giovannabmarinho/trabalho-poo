@@ -6,6 +6,7 @@ import { GuardaRoupa } from "../demo/ObjetosDemo.js"
 
 const prompt = promptsync({ sigint: true });
 
+// Ações disponíveis para o jogador
 const Acao = {
 	Ir: 'ir',
 	Fim: 'fim',
@@ -40,20 +41,18 @@ export class Engine {
 		this.#salaAtual = sala;
 	}
 
-	indicarFimDeJogo() {
-		this.#fim = true;
-	}
-
 	// Para criar um jogo deriva-se uma classe a partir de
-	// Engine e se sobrescreve o método "criaCenario"
+	// Engine e se sobrescreve o método "criarCenario"
 	criarCenario() { }
 
 	// Para poder acionar o método "jogar" deve-se garantir que 
 	// o método "criarCenario" foi acionado antes
 	jogar() {
 
-		console.log("");
+		// Descrição de introdução inicial do jogo ao jogador
+		console.log("Des");
 
+		// Loop de lógica básica do jogo
 		while (!this.#fim) {
 			console.log("-------------------------");
 			console.log(this.salaAtual.textoDescricao());
@@ -64,9 +63,12 @@ export class Engine {
 			const tokens = acao.split(" ");
 
 			switch (tokens[0]) {
+				// Finalizar o jogo
 				case Acao.Fim:
 					this.#fim = true;
 					break;
+
+				// Pegar um objeto que está na sala atual
 				case Acao.Pegar:
 					const itemPegar = this.salaAtual.pegar(tokens[1])
 					if (itemPegar != null) {
@@ -76,9 +78,13 @@ export class Engine {
 						console.log("Item " + tokens[1] + " não encontrado.");
 					}
 					break;
+
+				// Visualizar inventário do jogador
 				case Acao.Inventario:
 					console.log("Itens disponíveis para serem usados: " + this.#mochila.inventario());
 					break;
+				
+				// Usar um item em algum objeto que está na sala atual
 				case Acao.Usar:
 					const itemUsar = this.mochila.pegar(tokens[1]);
 
@@ -90,8 +96,10 @@ export class Engine {
 					const [usou, objeto] = this.salaAtual.usar(itemUsar, tokens[2])
 
 					if (usou) {
-						console.log("Feito !!");
+						this.mochila.remover(itemUsar);
+						console.log("Objeto usado com sucesso!");
 
+						// Condição de vitória do Jogo
 						if (objeto instanceof GuardaRoupa) {
 							this.#fim = true;
 							console.log("Parabéns, você salvou seu gato Porco!");
@@ -100,17 +108,23 @@ export class Engine {
 						console.log("Não é possível usar " + tokens[1] + "sobre" + tokens[2] + " nesta sala");
 					}
 					break;
+
+				// Ir para outra sala
 				case Acao.Ir:
 					const novaSala = this.salaAtual.ir(tokens[1]);
 					if (novaSala == null) {
-						console.log("Sala desconhecida ...");
+						console.log("Sala desconhecida...");
 					} else {
 						this.#salaAtual = novaSala;
 					}
 					break;
+
+				// Inspecionar objeto que está na sala atual
 				case Acao.Inspecionar:
 					this.salaAtual.inspecionar(tokens[1]);
 					break;
+
+				// Caso de outro comando desconhecido inserido
 				default:
 					console.log("Comando desconhecido: " + tokens[0]);
 					break;

@@ -52,8 +52,10 @@ export class Sala {
 	}
 	
 	pegar(nomeItem) {
-		validate(nomeItem,"String");
+		validate(nomeItem, "String");
 		const item = this.itens.get(nomeItem);
+
+		// Caso o item tenha sido encontrado nessa sala, retornamos ele e removemos ele da sala
 		if (item != null) {
 			this.itens.delete(nomeItem);
 			return item;
@@ -87,6 +89,12 @@ export class Sala {
 		return descricao;
 	}
 
+	/**
+	 * 
+	 * @param {*} item - Instância da classe Item que será usado em algum objeto dessa sala
+	 * @param {*} nomeObjeto - nome do objeto que será buscado nessa sala
+	 * @returns  [Boolean, Objeto]
+	 */
 	usar(item, nomeObjeto) {
 		validate(arguments, [Item, "String"]);
 

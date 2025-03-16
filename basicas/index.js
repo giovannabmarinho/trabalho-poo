@@ -1,0 +1,5 @@
+export * from "./objeto.js"
+export * from "./sala.js"
+export * from "./engine.js"
+export * from "./item.js"
+export * from "./mochila.js"

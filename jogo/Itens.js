@@ -17,3 +17,17 @@ export class SacheGato extends Item {
 		super("sache_gato");
 	}
 }
+
+export class VarinhaGato extends Item {
+	constructor() {
+		super("varinha_gato");
+	}
+}
+
+export class Lanterna extends Item {
+	cargas = 20;
+
+	constructor() {
+		super("lanterna");
+	}
+}

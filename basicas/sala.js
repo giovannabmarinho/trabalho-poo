@@ -3,15 +3,15 @@ import { Item } from "./item.js";
 
 export class Sala {
 	#nome;
-	#objetos;
-	#itens;
+	_objetos;
+	_itens;
 	#portas;
 	
 	constructor(nome) {
 		validate(nome, "String");
 		this.#nome = nome;
-		this.#objetos = new Map();
-		this.#itens = new Map();
+		this._objetos = new Map();
+		this._itens = new Map();
 		this.#portas = new Map();
 	}
 
@@ -20,11 +20,11 @@ export class Sala {
 	}
 	
 	get objetos() {
-		return this.#objetos;
+		return this._objetos;
 	}
 
 	get itens() {
-		return this.#itens;
+		return this._itens;
 	}
 	
 	get portas(){
@@ -37,17 +37,17 @@ export class Sala {
     }
 	
 	objetosDisponiveis(){
-		const objetos = [...this.#objetos.values()];
+		const objetos = [...this.objetos.values()];
     	return objetos.map(obj=>obj.nome).join(", ");
 	}
 
 	itensDisponiveis(){
-		const itens = [...this.#itens.values()];
+		const itens = [...this.itens.values()];
     	return itens.map(f=>f.nome).join(", ");
 	}
 	
 	portasDisponiveis(){
-		let arrPortas = [...this.#portas.values()];
+		let arrPortas = [...this.portas.values()];
     	return arrPortas.map(sala=>sala.nome).join(", ");
 	}
 	
@@ -69,20 +69,24 @@ export class Sala {
 		return this.#portas.get(porta);
 	}
 
-	textoDescricao() {
+	textoDescricao(possuiIluminacao) {
 		let descricao = `Você está em ${this.nome}\n`;
 
-        if (this.#objetos.size == 0){
-            descricao += "Objetos: não há objetos na sala\n";
-        } else {
-            descricao += "Objetos: "+this.objetosDisponiveis()+"\n";
-        }
-		
-        if (this.#itens.size == 0){
-            descricao += "Itens: não há itens na sala\n";
-        } else {
-            descricao += "Itens: "+this.itensDisponiveis()+"\n";
-        }
+		if (possuiIluminacao) {
+			if (this._objetos.size == 0){
+				descricao += "Objetos: não há objetos nesta sala\n";
+			} else {
+				descricao += "Objetos: "+this.objetosDisponiveis()+"\n";
+			}
+
+			if (this.itens.size == 0){
+				descricao += "Itens: não há itens nesta sala\n";
+			} else {
+				descricao += "Itens: "+this.itensDisponiveis()+"\n";
+			}
+		} else {
+			descricao += "Está muito escuro para ver o que tem nesta sala.\n";
+		}
 
         descricao += "Portas: "+this.portasDisponiveis()+"\n";
 
@@ -115,7 +119,7 @@ export class Sala {
 		const objeto = this.objetos.get(nomeObjeto);
 
 		if (!objeto) {
-			console.log("Item nâo encontrado");
+			console.log("Item não encontrado");
 		} else {
 			console.log(objeto.inspecionar());
 		}

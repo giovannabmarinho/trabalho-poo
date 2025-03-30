@@ -2,9 +2,15 @@ import { validate } from "bycontract";
 import promptsync from 'prompt-sync';
 import { Mochila } from "./mochila.js";
 import { Sala } from "./sala.js";
-import { GuardaRoupa } from "../demo/ObjetosDemo.js"
+import { GuardaRoupa } from "../jogo/Objetos.js"
 
 const prompt = promptsync({ sigint: true });
+
+function sleep(tempo) {
+	return new Promise(resolve => {
+		setTimeout(resolve, tempo);
+	});
+}
 
 // Ações disponíveis para o jogador
 const Acao = {
@@ -20,11 +26,13 @@ export class Engine {
 	#mochila;
 	#salaAtual;
 	#fim;
+	#vidasPorco;
 
 	constructor() {
 		this.#mochila = new Mochila();
 		this.#salaAtual = null;
 		this.#fim = false;
+		this.#vidasPorco = 30;
 		this.criarCenario();
 	}
 
@@ -41,21 +49,62 @@ export class Engine {
 		this.#salaAtual = sala;
 	}
 
+	#desgastarLanterna() {
+		const lanterna = this.#mochila.pegar("lanterna")
+		if (lanterna) {
+			lanterna.cargas -= 1;
+		}
+	}
+
+	#diminuirVidasPorco() {
+		this.#vidasPorco -= 1;
+	}
+
+	#getCargasLanterna() {
+		const lanterna = this.#mochila.pegar("lanterna")
+		if (lanterna) {
+			return lanterna.cargas;
+		}
+	}
+
 	// Para criar um jogo deriva-se uma classe a partir de
 	// Engine e se sobrescreve o método "criarCenario"
 	criarCenario() { }
 
+	async fimDeJogo() {
+		console.log("Você ouve um miado de tristeza")
+		await sleep(2000)
+		console.log("Outro miado, porém mais baixo")
+		await sleep(2000)
+		console.log("Você corre até o quarto de onde vem o miado e grita pelo seu gato, mas não recebe nenhuma resposta")
+		await sleep(5000)
+		console.log("Porco será lembrado para sempre com muito carinho")
+	}
+
 	// Para poder acionar o método "jogar" deve-se garantir que 
 	// o método "criarCenario" foi acionado antes
-	jogar() {
-
+	async jogar() {
 		// Descrição de introdução inicial do jogo ao jogador
 		console.log("Você chega em sua casa, liga a luz da sala e vê um bilhete. No bilhete está escrito:\nOie, não achei o Porco. Vê se ele tá escondido por aí. Logo voltamos.\n- Mãe") ;
 
 		// Loop de lógica básica do jogo
 		while (!this.#fim) {
+
+			if (this.#vidasPorco < 1) {
+				await this.fimDeJogo();
+				this.#fim = true
+				break
+			}
+
 			console.log("-------------------------");
-			console.log(this.salaAtual.textoDescricao());
+
+			const cargasLanterna = this.#getCargasLanterna();
+
+			console.log(this.salaAtual.textoDescricao(cargasLanterna > 0));
+
+			if (cargasLanterna !== undefined) {
+				console.log("Você tem " + cargasLanterna  + " cargas na sua lanterna");
+			}
 
 			const acoes = Object.values(Acao).join(", ")
 
@@ -93,6 +142,11 @@ export class Engine {
 						break;
 					}
 
+					if (!tokens[2]) {
+						console.log("É necessário dizer onde você quer usar o item. Ex: 'usar item_da_mochila objeto_da_sala'")
+						break;
+					}
+
 					const [usou, objeto] = this.salaAtual.usar(itemUsar, tokens[2])
 
 					if (usou) {
@@ -102,7 +156,7 @@ export class Engine {
 						// Condição de vitória do Jogo
 						if (objeto instanceof GuardaRoupa) {
 							this.#fim = true;
-							console.log("Parabéns, você salvou seu gato Porco!");
+							console.log("Parabéns, você salvou seu gato, o Porco!");
 						}
 					} else {
 						console.log("Não é possível usar " + tokens[1] + "sobre" + tokens[2] + " nesta sala");
@@ -116,6 +170,8 @@ export class Engine {
 						console.log("Sala desconhecida...");
 					} else {
 						this.#salaAtual = novaSala;
+						this.#desgastarLanterna();
+						this.#diminuirVidasPorco();
 					}
 					break;
 
@@ -130,7 +186,5 @@ export class Engine {
 					break;
 			}
 		}
-
-		console.log("Jogo encerrado!");
 	}
 }

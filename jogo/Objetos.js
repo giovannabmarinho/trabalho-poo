@@ -1,6 +1,6 @@
 import { validate } from "bycontract";
 import { Objeto, Item } from "../basicas/index.js";
-import { ChaveGuardaRoupa, ChaveGaveta } from "./ItensDemo.js";
+import { ChaveGuardaRoupa, ChaveGaveta } from "./Itens.js";
 
 export class GuardaRoupa extends Objeto {
 	constructor() {
@@ -18,6 +18,7 @@ export class GuardaRoupa extends Objeto {
 	}
 
 	inspecionar() {
+		super.inspecionar();
 		return "Miauuuuuuu";
 	}
 }
@@ -28,7 +29,8 @@ export class PortaChaves extends Objeto {
 	}
 
 	inspecionar() {
-		return "Você vê duas chaves no porta chaves";
+		super.inspecionar();
+		return "Você vê uma chave pequena de uma gaveta...";
 	}
 }
 
@@ -38,6 +40,7 @@ export class Mesa extends Objeto {
 	}
 
 	inspecionar() {
+		super.inspecionar();
 		return "Há um sachê para gatos em cima dela.";
 	}
 }
@@ -57,6 +60,20 @@ export class ArmarioBanheiro extends Objeto {
 	}
 
 	inspecionar() {
+		super.inspecionar();
 		return "É um armário com gavetas.";
 	}
 }
+
+export class CaixaFerramentas extends Objeto {
+	constructor() {
+		super("caixa_ferramentas")
+	}
+
+	inspecionar() {
+		super.inspecionar();
+		return "Você vê uma lanterna dentro"
+	}
+}
+
+
